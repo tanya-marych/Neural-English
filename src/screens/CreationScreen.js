@@ -3,6 +3,8 @@ import { Platform, StyleSheet, Image, Text, View, TouchableOpacity } from 'react
 import Tflite from 'tflite-react-native';
 import ImagePicker from 'react-native-image-picker';
 
+import { translate } from '../services/googleTranslationApi';
+
 let tflite = new Tflite();
 
 const height = 350;
@@ -11,8 +13,6 @@ const blue = "#25d5fd";
 const mobile = "MobileNet";
 const ssd = "SSD MobileNet";
 const yolo = "Tiny YOLOv2";
-const deeplab = "Deeplab";
-const posenet = "PoseNet";
 
 export default class App extends Component {
   constructor(props) {
@@ -36,14 +36,6 @@ export default class App extends Component {
       case yolo:
         var modelFile = 'models/yolov2_tiny.tflite';
         var labelsFile = 'models/yolov2_tiny.txt';
-        break;
-      case deeplab:
-        var modelFile = 'models/deeplabv3_257_mv_gpu.tflite';
-        var labelsFile = 'models/deeplabv3_257_mv_gpu.txt';
-        break;
-      case posenet:
-        var modelFile = 'models/posenet_mv1_075_float_from_checkpoints.tflite';
-        var labelsFile = '';
         break;
       default:
         var modelFile = 'models/mobilenet_v1_1.0_224.tflite';
@@ -119,31 +111,6 @@ export default class App extends Component {
               });
             break;
 
-          case deeplab:
-            tflite.runSegmentationOnImage({
-              path
-            },
-              (err, res) => {
-                if (err)
-                  console.log(err);
-                else
-                  this.setState({ recognitions: res });
-              });
-            break;
-
-          case posenet:
-            tflite.runPoseNetOnImage({
-              path,
-              threshold: 0.8
-            },
-              (err, res) => {
-                if (err)
-                  console.log(err);
-                else
-                  this.setState({ recognitions: res });
-              });
-            break;
-
           default:
             tflite.runModelOnImage({
               path,
@@ -183,35 +150,6 @@ export default class App extends Component {
         });
         break;
 
-      case deeplab:
-        return (
-          recognitions.length > 0 ?
-            <Image
-              style={{ flex: 1, width: imageWidth, height: imageHeight }}
-              source={{ uri: 'data:image/png;base64,' + recognitions }}
-              opacity={0.6}
-            /> : undefined
-        );
-        break;
-
-      case posenet:
-        return recognitions.map((res, id) => {
-          return Object.values(res["keypoints"]).map((k, id) => {
-            var left = k["x"] * imageWidth - 6;
-            var top = k["y"] * imageHeight - 6;
-            var width = imageWidth;
-            var height = imageHeight;
-            return (
-              <View key={id} style={{position: 'absolute', top, left, width, height }}>
-                <Text style={{ color: blue, fontSize: 12 }}>
-                  {"● " + k["part"]}
-                </Text>
-              </View>
-            )
-          });
-        });
-        break;
-
       default:
         return recognitions.map((res, id) => {
           return (
@@ -221,6 +159,13 @@ export default class App extends Component {
           )
         });
     }
+  }
+
+  handleTranslate = async () => {
+    console.warn('1');
+    const res = await translate();
+
+    console.warn("res", res);
   }
 
   render() {
@@ -234,6 +179,9 @@ export default class App extends Component {
     }
     return (
       <View style={styles.container}>
+        <TouchableOpacity onPress={this.handleTranslate}>
+          <Text>test</Text>
+        </TouchableOpacity>
         {model ?
           <TouchableOpacity style={
             [styles.imageContainer, {
@@ -257,8 +205,6 @@ export default class App extends Component {
             {renderButton(mobile)}
             {renderButton(ssd)}
             {renderButton(yolo)}
-            {renderButton(deeplab)}
-            {renderButton(posenet)}
           </View>
         }
       </View>
