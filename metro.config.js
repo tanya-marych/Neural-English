@@ -1,5 +1,5 @@
 module.exports = {
   resolver: {
-    assetExts: ['tflite', 'txt']
+    assetExts: ['tflite', 'txt', 'png']
   }
 }
