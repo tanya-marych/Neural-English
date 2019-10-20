@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import { connect } from 'react-redux';
 import { Header } from "react-navigation-stack";
 
 import { translate } from '../services/googleTranslationApi';
@@ -32,11 +33,11 @@ const { width, height } = Dimensions.get('screen');
 const IMAGE_HEIGHT = height * 0.5;
 const KEYBOARD_VERTICAL_OFFSET = Header.HEIGHT + 40;
 
-export default class App extends Component {
+class CreationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      model: MODEL_TYPES.SSD,
+      model: MODEL_TYPES.MOBILE,
       source: null,
       recognitions: []
     };
@@ -47,7 +48,6 @@ export default class App extends Component {
   }
 
   setRecognitions = recognitions => {
-    console.warn('recognitions', recognitions);
     this.setState({ recognitions });
   }
 
@@ -210,6 +210,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   confirmContainer: {
-    marginTop: 4 * Paddings.DEFAULT,
+    marginVertical: 4 * Paddings.DEFAULT,
   },
 });
+
+export default connect(
+  null,
+  null,
+)(CreationScreen);
