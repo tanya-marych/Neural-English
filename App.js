@@ -4,8 +4,9 @@ import { createAppContainer } from 'react-navigation';
 
 import MainNavigation from './src/navigation/MainNavigation';
 
-import store from './src/redux/store.js';
+import configureStore from './src/redux/store.js';
 
+const store = configureStore();
 const AppContainer = createAppContainer(MainNavigation);
 
 // Render the app container component with the provider around it
