@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import {
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
+import { Header } from "react-navigation-stack";
 
 import { translate } from '../services/googleTranslationApi';
 import {
@@ -11,25 +21,29 @@ import {
   detectObjectWithMOBILE
 } from '../services/recognizeService';
 
-const height = 350;
-const width = 350;
-const blue = "#25d5fd";
+import { selectImageFromLibrary } from '../helpers/imagePicker';
+
+import { Color, Paddings } from '../constants';
+import WordButton from '../components/WordButton';
+import Wording from '../wording';
+import ConfirmButton from '../components/ConfirmButton';
+
+const { width, height } = Dimensions.get('screen');
+const IMAGE_HEIGHT = height * 0.5;
+const KEYBOARD_VERTICAL_OFFSET = Header.HEIGHT + 40;
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      model: null,
+      model: MODEL_TYPES.SSD,
       source: null,
-      imageHeight: height,
-      imageWidth: width,
       recognitions: []
     };
   }
 
-  onSelectModel(model) {
-    this.setState({ model });
-    loadModel(model);
+  componentDidMount() {
+    loadModel(this.state.model);
   }
 
   setRecognitions = recognitions => {
@@ -37,143 +51,165 @@ export default class App extends Component {
     this.setState({ recognitions });
   }
 
-  onSelectImage = () => {
-    const options = {
-      title: 'Select Avatar',
-      customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        var path = Platform.OS === 'ios' ? response.uri : 'file://' + response.path;
-        var w = response.width;
-        var h = response.height;
-        this.setState({
-          source: { uri: path },
-          imageHeight: h * width / w,
-          imageWidth: width
-        });
+  detectObjectOnImage = ({ path }) => {
+    this.setState({ source: { uri: path } });
 
-        switch (this.state.model) {
-          case MODEL_TYPES.SSD:
-            detectObjectWithSSD(path, this.setRecognitions);
-            break;
+    switch (this.state.model) {
+      case MODEL_TYPES.SSD:
+        detectObjectWithSSD(path, this.setRecognitions);
+        break;
 
-          case MODEL_TYPES.YOLO:
-            detectObjectWithYOLO(path, this.setRecognitions);
-            break;
+      case MODEL_TYPES.YOLO:
+        detectObjectWithYOLO(path, this.setRecognitions);
+        break;
 
-          default:
-            detectObjectWithMOBILE(path, this.setRecognitions);
-        }
-      }
-    });
+      default:
+        detectObjectWithMOBILE(path, this.setRecognitions);
+    }
   }
 
-  renderResults = () => this.state.recognitions.map((res, id) => (
-    <Text key={id} style={{ color: 'black' }}>
-      {res["label"] + "-" + (res["confidence"] * 100).toFixed(0) + "%"}
-    </Text>
-  ));
+  onSelectImage = () => selectImageFromLibrary(this.detectObjectOnImage);
 
   handleTranslate = async () => {
     console.warn('1');
-    const res = await translate();
+    // const res = await translate();
 
-    console.warn("res", res);
+    // console.warn("res", res);
   }
 
+  textInput = null;
+
+  handleChangeInput = (word) => {
+    this.textInput = word;
+  }
+
+  renderDescription = () => this.state.recognitions && this.state.recognitions.length
+    ? (
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.selectWord}>{Wording.selectWord}</Text>
+        <View style={styles.wordsContainer}>
+          {this.state.recognitions.map((res, id) => (
+            <WordButton
+              key={id}
+              text={res.label}
+              onPress={this.handlePressWord}
+            />
+          ))}
+        </View>
+        <Text style={styles.selectWord}>{Wording.or}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder={Wording.addWord}
+          onChangeText={this.handleChangeInput}
+          autoCorrect={false}
+        />
+        <View style={styles.confirmContainer}>
+          <ConfirmButton
+            text={Wording.addToLearning}
+            onPress={this.handleTranslate}
+          />
+        </View>
+      </View>)
+    : null;
+
   render() {
-    const { model, source, imageHeight, imageWidth } = this.state;
-    var renderButton = (m) => {
-      return (
-        <TouchableOpacity style={styles.button} onPress={this.onSelectModel.bind(this, m)}>
-          <Text style={styles.buttonText}>{m}</Text>
-        </TouchableOpacity>
-      );
-    }
+    const { source } = this.state;
+
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={this.handleTranslate}>
-          <Text>test</Text>
-        </TouchableOpacity>
-        {model ?
-          <TouchableOpacity style={
-            [styles.imageContainer, {
-              height: imageHeight,
-              width: imageWidth,
-              borderWidth: source ? 0 : 2
-            }]} onPress={this.onSelectImage.bind(this)}>
-            {
-              source ?
-                <Image source={source} style={{
-                  height: imageHeight, width: imageWidth
-                }} resizeMode="contain" /> :
-                <Text style={styles.text}>Select Picture</Text>
-            }
-            <View>
-              {this.renderResults()}
-            </View>
-          </TouchableOpacity>
-          :
-          <View>
-            {renderButton(MODEL_TYPES.MOBILE)}
-            {renderButton(MODEL_TYPES.SSD)}
-            {renderButton(MODEL_TYPES.YOLO)}
+      <KeyboardAvoidingView
+        behavior='padding'
+        style={styles.flex}
+        keyboardVerticalOffset={KEYBOARD_VERTICAL_OFFSET}
+      >
+        <ScrollView style={styles.flex}>
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.imageContainer}
+              onPress={this.onSelectImage}
+            >
+              {source
+                ? (
+                  <Image
+                    source={source}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />)
+                : <Text style={styles.text}>Select Picture</Text>
+              }
+            </TouchableOpacity>
+            {this.renderDescription()}
           </View>
-        }
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: 'white'
+    padding: Paddings.DEFAULT,
   },
   imageContainer: {
-    borderColor: blue,
-    borderRadius: 5,
-    alignItems: "center"
-  },
-  text: {
-    color: blue
-  },
-  button: {
-    width: 200,
-    backgroundColor: blue,
-    borderRadius: 10,
-    height: 40,
+    width: '100%',
+    height: IMAGE_HEIGHT,
+    backgroundColor: Color.YELLOW_ORANGE,
+    borderRadius: Paddings.DEFAULT,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowColor: Color.BLACK(),
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 15
+  image: {
+    flex: 1,
+    width: '100%',
+    height: IMAGE_HEIGHT,
+    borderRadius: Paddings.DEFAULT,
+    overflow: 'hidden',
   },
-  box: {
-    position: 'absolute',
-    borderColor: blue,
-    borderWidth: 2,
+  text: {
+    color: Color.WHITE,
+    fontSize: 24,
+    fontWeight: 'bold',
   },
-  boxes: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: 0,
-  }
+  descriptionContainer: {
+    marginTop: 2 * Paddings.DEFAULT,
+    paddingHorizontal: 4 * Paddings.DEFAULT,
+    width: '100%',
+    alignItems: 'center',
+  },
+  wordsContainer: {
+    marginVertical: Paddings.DEFAULT,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  selectWord: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: Color.BLACK(0.5),
+    letterSpacing: 0.3,
+  },
+  input: {
+    marginVertical: Paddings.DEFAULT,
+    fontSize: 14,
+    backgroundColor: Color.BLACK(0.1),
+    borderRadius: 4,
+    padding: 6,
+    width: '100%',
+  },
+  confirmContainer: {
+    marginTop: 4 * Paddings.DEFAULT,
+  },
 });

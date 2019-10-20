@@ -8,7 +8,7 @@ const defaultNavigationOptions =({navigation}) => ({
   headerLeft: (
     <Button
       onPress={() => navigation.toggleDrawer()}
-      title="Info"
+      title="Menu"
       color="black"
     />
   ),
