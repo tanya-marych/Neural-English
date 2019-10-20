@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
-import Tflite from 'tflite-react-native';
 import ImagePicker from 'react-native-image-picker';
 
 import { translate } from '../services/googleTranslationApi';
-
-let tflite = new Tflite();
+import {
+  MODEL_TYPES,
+  loadModel,
+  detectObjectWithSSD,
+  detectObjectWithYOLO,
+  detectObjectWithMOBILE
+} from '../services/recognizeService';
 
 const height = 350;
 const width = 350;
 const blue = "#25d5fd";
-const mobile = "MobileNet";
-const ssd = "SSD MobileNet";
-const yolo = "Tiny YOLOv2";
 
 export default class App extends Component {
   constructor(props) {
@@ -28,32 +29,15 @@ export default class App extends Component {
 
   onSelectModel(model) {
     this.setState({ model });
-    switch (model) {
-      case ssd:
-        var modelFile = 'models/ssd_mobilenet.tflite';
-        var labelsFile = 'models/ssd_mobilenet.txt';
-        break;
-      case yolo:
-        var modelFile = 'models/yolov2_tiny.tflite';
-        var labelsFile = 'models/yolov2_tiny.txt';
-        break;
-      default:
-        var modelFile = 'models/mobilenet_v1_1.0_224.tflite';
-        var labelsFile = 'models/mobilenet_v1_1.0_224.txt';
-    }
-    tflite.loadModel({
-      model: modelFile,
-      labels: labelsFile,
-    },
-      (err, res) => {
-        if (err)
-          console.log(err);
-        else
-          console.log(res);
-      });
+    loadModel(model);
   }
 
-  onSelectImage() {
+  setRecognitions = recognitions => {
+    console.warn('recognitions', recognitions);
+    this.setState({ recognitions });
+  }
+
+  onSelectImage = () => {
     const options = {
       title: 'Select Avatar',
       customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -80,86 +64,26 @@ export default class App extends Component {
         });
 
         switch (this.state.model) {
-          case ssd:
-            tflite.detectObjectOnImage({
-              path,
-              threshold: 0.2,
-              numResultsPerClass: 1,
-            },
-              (err, res) => {
-                if (err)
-                  console.log(err);
-                else
-                  this.setState({ recognitions: res });
-              });
+          case MODEL_TYPES.SSD:
+            detectObjectWithSSD(path, this.setRecognitions);
             break;
 
-          case yolo:
-            tflite.detectObjectOnImage({
-              path,
-              model: 'YOLO',
-              imageMean: 0.0,
-              imageStd: 255.0,
-              threshold: 0.4,
-              numResultsPerClass: 1,
-            },
-              (err, res) => {
-                if (err)
-                  console.log(err);
-                else
-                  this.setState({ recognitions: res });
-              });
+          case MODEL_TYPES.YOLO:
+            detectObjectWithYOLO(path, this.setRecognitions);
             break;
 
           default:
-            tflite.runModelOnImage({
-              path,
-              imageMean: 128.0,
-              imageStd: 128.0,
-              numResults: 3,
-              threshold: 0.05
-            },
-              (err, res) => {
-                if (err)
-                  console.log(err);
-                else
-                  this.setState({ recognitions: res });
-              });
+            detectObjectWithMOBILE(path, this.setRecognitions);
         }
       }
     });
   }
 
-  renderResults() {
-    const { model, recognitions, imageHeight, imageWidth } = this.state;
-    switch (model) {
-      case ssd:
-      case yolo:
-        return recognitions.map((res, id) => {
-          var left = res["rect"]["x"] * imageWidth;
-          var top = res["rect"]["y"] * imageHeight;
-          var width = res["rect"]["w"] * imageWidth;
-          var height = res["rect"]["h"] * imageHeight;
-          return (
-            <View key={id} style={[styles.box, { top, left, width, height }]}>
-              <Text style={{ color: 'white', backgroundColor: blue }}>
-                {res["detectedClass"] + " " + (res["confidenceInClass"] * 100).toFixed(0) + "%"}
-              </Text>
-            </View>
-          )
-        });
-        break;
-
-      default:
-        return recognitions.map((res, id) => {
-          return (
-            <Text key={id} style={{ color: 'black' }}>
-              {res["label"] + "-" + (res["confidence"] * 100).toFixed(0) + "%"}
-            </Text>
-          )
-        });
-    }
-  }
+  renderResults = () => this.state.recognitions.map((res, id) => (
+    <Text key={id} style={{ color: 'black' }}>
+      {res["label"] + "-" + (res["confidence"] * 100).toFixed(0) + "%"}
+    </Text>
+  ));
 
   handleTranslate = async () => {
     console.warn('1');
@@ -196,15 +120,15 @@ export default class App extends Component {
                 }} resizeMode="contain" /> :
                 <Text style={styles.text}>Select Picture</Text>
             }
-            <View style={styles.boxes}>
+            <View>
               {this.renderResults()}
             </View>
           </TouchableOpacity>
           :
           <View>
-            {renderButton(mobile)}
-            {renderButton(ssd)}
-            {renderButton(yolo)}
+            {renderButton(MODEL_TYPES.MOBILE)}
+            {renderButton(MODEL_TYPES.SSD)}
+            {renderButton(MODEL_TYPES.YOLO)}
           </View>
         }
       </View>
