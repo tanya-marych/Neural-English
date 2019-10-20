@@ -1,13 +1,13 @@
 import { createStackNavigator } from 'react-navigation-stack';
 
-import CreationScreen from '../screens/CreationScreen';
+import LearningScreen from '../screens/LearningScreen';
 
 const AppNavigator = createStackNavigator(
 {
-  Creation: CreationScreen,
+  Learning: LearningScreen,
 },
 {
-  initialRouteName: 'Creation',
+  initialRouteName: 'Learning',
 });
 
 export default AppNavigator;
