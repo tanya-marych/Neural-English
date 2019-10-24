@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Paddings, Color } from '../constants';
 
 const WordButton = ({ onPress, text }) => (
-  <TouchableOpacity style={styles.container} onPress={onPress}>
+  <TouchableOpacity style={styles.container} onPress={() => onPress(text)}>
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
 )
