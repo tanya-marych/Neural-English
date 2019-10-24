@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     margin: Paddings.DEFAULT,
   },
   selectPictureContainer: {
-    backgroundColor: Color.YELLOW_ORANGE,
+    backgroundColor: Color.YELLOW_ORANGE(),
   },
   cameraPictureContainer: {
     backgroundColor: Color.BLACK(0.5),

@@ -1,23 +1,14 @@
-import React from 'react';
-import { Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import CreationScreen from '../screens/CreationScreen';
 import SelectCreationTypeScreen from '../screens/SelectCreationTypeScreen';
 
+import defaultNavigationOptions from '../components/Navigation/Header';
+
 export const CREATION_ROUTES = {
   SELECT_CREATION_TYPE: 'SelectCreationType',
   CREATION: 'Creation',
 }
-const defaultNavigationOptions =({navigation}) => ({
-  headerLeft: (
-    <Button
-      onPress={() => navigation.toggleDrawer()}
-      title="Menu"
-      color="black"
-    />
-  ),
-});
 
 const AppNavigator = createStackNavigator(
 {

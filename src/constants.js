@@ -6,14 +6,16 @@ export const Color = {
   OLD_BURGUNGY: '#3F292B',
   RUBER: '#D34F73',
 
-  YELLOW_ORANGE: 'rgba(255, 188, 66, 1)',
+  
   RUBY: 'rgba(216, 17, 89, 1)',
   DARK_RASPBERRY: 'rgba(143, 45, 86, 1)',
   CELADON_GREEN: 'rgba(33, 131, 128, 1)',
   MIDDLE_BLUE: 'rgba(115, 210, 222, 1)',
 
+  YELLOW_ORANGE: (opacity = 1) => `rgba(255, 188, 66, ${opacity})`,
   BLACK: (opacity = 1) => `rgba(0,0,0,${opacity})`,
   WHITE: (opacity = 1) => `rgba(255,255,255,${opacity})`,
+  HEADER: '#fffddd',
 };
 
 export const Paddings = {

@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   source: {
-    color: Color.YELLOW_ORANGE,
+    color: Color.YELLOW_ORANGE(),
     fontSize: 14,
     fontWeight: '400',
   },

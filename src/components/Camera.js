@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 10,
-    backgroundColor: Color.YELLOW_ORANGE,
+    backgroundColor: Color.YELLOW_ORANGE(),
   },
   spinner: {
     position: 'absolute',
@@ -111,7 +111,7 @@ class Camera extends React.PureComponent {
         </RNCamera>
         {this.state.loading
           ? <ActivityIndicator
-              color={Color.YELLOW_ORANGE}
+              color={Color.YELLOW_ORANGE()}
               size="large"
               style={styles.spinner}
             />

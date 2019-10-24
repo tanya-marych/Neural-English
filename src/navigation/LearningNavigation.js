@@ -1,5 +1,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
 
+import defaultNavigationOptions from '../components/Navigation/Header';
+
 import LearningScreen from '../screens/LearningScreen';
 
 const AppNavigator = createStackNavigator(
@@ -8,6 +10,7 @@ const AppNavigator = createStackNavigator(
 },
 {
   initialRouteName: 'Learning',
+  defaultNavigationOptions,
 });
 
 export default AppNavigator;
