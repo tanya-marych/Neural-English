@@ -6,8 +6,6 @@ export const Color = {
   OLD_BURGUNGY: '#3F292B',
   RUBER: '#D34F73',
 
-
-  WHITE: 'white',
   YELLOW_ORANGE: 'rgba(255, 188, 66, 1)',
   RUBY: 'rgba(216, 17, 89, 1)',
   DARK_RASPBERRY: 'rgba(143, 45, 86, 1)',
@@ -15,6 +13,7 @@ export const Color = {
   MIDDLE_BLUE: 'rgba(115, 210, 222, 1)',
 
   BLACK: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+  WHITE: (opacity = 1) => `rgba(255,255,255,${opacity})`,
 };
 
 export const Paddings = {

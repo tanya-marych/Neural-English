@@ -4,10 +4,10 @@ import CreationNavigation from './CreationNavigation';
 import LearningNavigation from './LearningNavigation';
 
 const DrawerNavigation = createDrawerNavigator({
-  CreationFlow: CreationNavigation,
-  LearningFlow: LearningNavigation,
+  Creation: CreationNavigation,
+  Learning: LearningNavigation,
 }, {
-  initialRouteName: 'CreationFlow',
+  initialRouteName: 'Creation',
 });
 
 export default DrawerNavigation;

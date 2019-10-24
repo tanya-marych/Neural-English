@@ -11,9 +11,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Header } from "react-navigation-stack";
+import { Header } from 'react-navigation-stack';
 
 import { translate } from '../services/googleTranslationApi';
+
 import {
   MODEL_TYPES,
   loadModel,
@@ -28,6 +29,7 @@ import { Color, Paddings } from '../constants';
 import WordButton from '../components/WordButton';
 import Wording from '../wording';
 import ConfirmButton from '../components/ConfirmButton';
+import { addWord } from '../redux/actions';
 
 const { width, height } = Dimensions.get('screen');
 const IMAGE_HEIGHT = height * 0.5;
@@ -39,20 +41,28 @@ class CreationScreen extends Component {
     this.state = {
       model: MODEL_TYPES.MOBILE,
       source: null,
-      recognitions: []
+      recognitions: [],
+      selectedWord: null,
     };
   }
 
   componentDidMount() {
     loadModel(this.state.model);
+
+    const { path } = this.props.navigation.state.params;
+
+    this.setState(
+      () => ({ source: { uri: path } }),
+      this.detectObjectOnImage,
+    );
   }
 
   setRecognitions = recognitions => {
     this.setState({ recognitions });
   }
 
-  detectObjectOnImage = ({ path }) => {
-    this.setState({ source: { uri: path } });
+  detectObjectOnImage = () => {
+    const {uri: path } = this.state.source;
 
     switch (this.state.model) {
       case MODEL_TYPES.SSD:
@@ -68,19 +78,30 @@ class CreationScreen extends Component {
     }
   }
 
-  onSelectImage = () => selectImageFromLibrary(this.detectObjectOnImage);
-
   handleTranslate = async () => {
-    console.warn('1');
-    // const res = await translate();
-
-    // console.warn("res", res);
+    if (this.state.selectedWord || this.textInput) {
+      this.props.addWord({
+        url: this.state.source.uri,
+        source: this.state.selectedWord || this.textInput,
+        translation: this.state.selectedWord || this.textInput,
+      });
+      this.setState({
+        selectedWord: null,
+        source: null,
+        recognitions: [],
+      });
+      this.textInput = null;
+    }
   }
 
   textInput = null;
 
   handleChangeInput = (word) => {
     this.textInput = word;
+  }
+
+  handlePressWord = (selectedWord) => {
+    this.setState({ selectedWord });
   }
 
   renderDescription = () => this.state.recognitions && this.state.recognitions.length
@@ -123,10 +144,7 @@ class CreationScreen extends Component {
       >
         <ScrollView style={styles.flex}>
           <View style={styles.container}>
-            <TouchableOpacity
-              style={styles.imageContainer}
-              onPress={this.onSelectImage}
-            >
+            <View style={styles.imageContainer}>
               {source
                 ? (
                   <Image
@@ -134,9 +152,9 @@ class CreationScreen extends Component {
                     style={styles.image}
                     resizeMode="cover"
                   />)
-                : <Text style={styles.text}>Select Picture</Text>
+                : null
               }
-            </TouchableOpacity>
+            </View>
             {this.renderDescription()}
           </View>
         </ScrollView>
@@ -180,7 +198,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   text: {
-    color: Color.WHITE,
+    color: Color.WHITE(),
     fontSize: 24,
     fontWeight: 'bold',
   },
@@ -214,7 +232,13 @@ const styles = StyleSheet.create({
   },
 });
 
+function mapDispatchToProps(dispatch) {
+  return {
+    addWord: payload => dispatch(addWord(payload)),
+  };
+}
+
 export default connect(
   null,
-  null,
+  mapDispatchToProps,
 )(CreationScreen);

@@ -21,7 +21,7 @@ export const selectImageFromLibrary = (callback) => {
     } else {
       var path = Platform.OS === 'ios' ? response.uri : 'file://' + response.path;
       
-      callback({ path });
+      callback(path);
     }
   });
 }

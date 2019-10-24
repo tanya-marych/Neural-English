@@ -3,7 +3,12 @@ import { Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import CreationScreen from '../screens/CreationScreen';
+import SelectCreationTypeScreen from '../screens/SelectCreationTypeScreen';
 
+export const CREATION_ROUTES = {
+  SELECT_CREATION_TYPE: 'SelectCreationType',
+  CREATION: 'Creation',
+}
 const defaultNavigationOptions =({navigation}) => ({
   headerLeft: (
     <Button
@@ -16,10 +21,12 @@ const defaultNavigationOptions =({navigation}) => ({
 
 const AppNavigator = createStackNavigator(
 {
-  Creation: CreationScreen,
+  [CREATION_ROUTES.SELECT_CREATION_TYPE]: SelectCreationTypeScreen,
+  [CREATION_ROUTES.CREATION]: CreationScreen,
+
 },
 {
-  initialRouteName: 'Creation',
+  initialRouteName: CREATION_ROUTES.SELECT_CREATION_TYPE,
   defaultNavigationOptions,
 });
 

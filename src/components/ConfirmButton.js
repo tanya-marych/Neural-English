@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   text: {
-    color: Color.WHITE,
+    color: Color.WHITE(),
     fontWeight: 'bold',
     fontSize: 18,
   },

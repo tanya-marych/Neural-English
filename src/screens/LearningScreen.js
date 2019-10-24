@@ -1,14 +1,161 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Header } from 'react-navigation-stack';
+import { BlurView } from '@react-native-community/blur';
+
+import { getWords } from '../redux/selectors';
+import { Paddings, Color } from '../constants';
+import Wording from '../wording';
+
+const COLUMNS = 3;
+const { width, height } = Dimensions.get('screen');
+
+// margins and paddings
+const COLUMN_SIZE = (width - 2 * Paddings.DEFAULT) / COLUMNS;
+const CONTAINER_MARGIN = Paddings.HALF_DEFAULT;
+const IMAGE_CONTAINER_SIZE = COLUMN_SIZE - 2 * CONTAINER_MARGIN;
+const IMAGE_SIZE = IMAGE_CONTAINER_SIZE - 2 * Paddings.DEFAULT;
+const OVERLAY_SIZE = 0.75 * width;
 
 class LearningScreen extends React.Component {
+  state = {
+    selected: null,
+  }
+
+  toggleLargeMode = (selected = null) => {
+    this.setState({ selected });
+  }
+
+  renderItem = ({ item: word }) => (
+    <TouchableOpacity onPress={() => this.toggleLargeMode(word)}>
+      <View style={styles.imageContainer}>
+        <Image 
+          source={{ uri: word.url }}
+          style={styles.image}
+        />
+        <View style={styles.textContainer}>
+          <Text>
+            <Text style={styles.label}>{Wording.original}</Text>
+            <Text style={styles.source}>{word.source}</Text>
+          </Text>
+          <Text>
+            <Text style={styles.label}>{Wording.translation}</Text>
+            <Text style={styles.translation}>{word.translation}</Text>
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  keyExtractor = item => item.id;
+
+  renderOverlay = () => this.state.selected
+    ? (
+      <TouchableOpacity style={styles.overlay} onPress={() => this.toggleLargeMode()}>
+        <BlurView
+          style={styles.overlayImageContainer}
+          blurType='light'
+          blurAmount={3}
+        >
+          <Image
+            source={{ uri: this.state.selected.url }}
+            style={styles.overlayImage}
+          />
+        </BlurView>
+      </TouchableOpacity>
+    ) : null;
+
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Home Screen</Text>
+      <View style={styles.container}>
+        <FlatList
+          style={styles.list}
+          data={this.props.words}
+          numColumns={COLUMNS}
+          renderItem={this.renderItem}
+          keyExtractor={item => item.id}
+        />
+        {this.renderOverlay()}
       </View>
     );
   }
 }
 
-export default LearningScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+    paddingHorizontal: Paddings.DEFAULT,
+    paddingTop: Paddings.DEFAULT,
+  },
+  imageContainer: {
+    padding: Paddings.DEFAULT,
+    margin: CONTAINER_MARGIN,
+    width: IMAGE_CONTAINER_SIZE,
+    backgroundColor: Color.WHITE(),
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 4,
+    shadowOpacity: 0.2,
+    shadowColor: Color.BLACK(),
+    borderRadius: Paddings.HALF_DEFAULT,
+  },
+  image: {
+    width: IMAGE_SIZE,
+    height: IMAGE_SIZE,
+    borderRadius: Paddings.HALF_DEFAULT,
+    overflow: 'hidden',
+    marginBottom: Paddings.DEFAULT,
+  },
+  textContainer: {
+  },
+  label: {
+    color: Color.BLACK(0.5),
+    fontSize: 14,
+  },
+  source: {
+    color: Color.YELLOW_ORANGE,
+    fontSize: 14,
+    fontWeight: '400',
+  },
+  translation: {
+    color: Color.DARK_RASPBERRY,
+    fontSize: 14,
+    fontWeight: '400',
+  },
+  overlay: {
+    width,
+    height: height - Header.HEIGHT,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  overlayImageContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlayImage: {
+    width: OVERLAY_SIZE,
+    height: OVERLAY_SIZE,
+    borderRadius: Paddings.DEFAULT,
+  },
+});
+
+function mapStateToProps(state) {
+  return {
+    words: getWords(state),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  null,
+)(LearningScreen);
