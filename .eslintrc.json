@@ -1,0 +1,62 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    },
+    "parser": "babel-eslint",
+    "rules": {
+        "react/jsx-filename-extension": [
+            1,
+            {
+              "extensions": [
+                ".js",
+                ".jsx"
+              ]
+            }
+          ],
+          "react/jsx-no-bind": ["warn", {
+            "allowBind": false
+          }],
+          "react/forbid-prop-types": ["warn"],
+          "react/require-default-props": ["warn"],
+          "import/prefer-default-export": "off",
+          "import/no-named-as-default": "off",
+          "no-confusing-arrow": "off",
+          "no-nested-ternary": "off",
+          "no-unused-expressions": "warn",
+          "no-shadow": "warn",
+          "no-await-in-loop": "warn",
+          "no-underscore-dangle": ["off"],
+          "max-len": [1],
+          "no-param-reassign": "warn",
+          "brace-style": "warn",
+          "no-return-assign": "warn",
+          "arrow-body-style": "warn",
+          "no-use-before-define": "warn",
+          "global-require": "off",
+          "no-unused-vars": "error"
+    }
+}
+
