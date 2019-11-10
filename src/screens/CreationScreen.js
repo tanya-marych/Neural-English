@@ -23,15 +23,14 @@ import {
   detectObjectWithMOBILE
 } from '../services/recognizeService';
 
-import { selectImageFromLibrary } from '../helpers/imagePicker';
-
 import { Color, Paddings } from '../constants';
 import WordButton from '../components/WordButton';
 import Wording from '../wording';
 import ConfirmButton from '../components/ConfirmButton';
 import { addWord } from '../redux/actions';
+import { CREATION_ROUTES } from '../navigation/CreationNavigation';
 
-const { width, height } = Dimensions.get('screen');
+const { height } = Dimensions.get('screen');
 const IMAGE_HEIGHT = height * 0.5;
 const KEYBOARD_VERTICAL_OFFSET = Header.HEIGHT + 40;
 
@@ -91,6 +90,7 @@ class CreationScreen extends Component {
         recognitions: [],
       });
       this.textInput = null;
+      this.props.navigation.navigate(CREATION_ROUTES.SELECT_CREATION_TYPE);
     }
   }
 

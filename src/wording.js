@@ -7,6 +7,11 @@ const Wording = {
   translation: 'en: ',
   createFromCamera: 'Create from Camera',
   selectPicture: 'Select Picture',
+  study: 'Study',
+  next: 'Next',
+  studied: 'Studied: ',
+  correctStudied: 'Correct: ',
+  finish: 'Finish',
 };
 
 export default Wording;

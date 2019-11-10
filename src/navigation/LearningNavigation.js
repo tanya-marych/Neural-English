@@ -2,14 +2,21 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import defaultNavigationOptions from '../components/Navigation/Header';
 
-import LearningScreen from '../screens/LearningScreen';
+import DictionaryScreen from '../screens/DictionaryScreen';
+import StudyScreen from '../screens/StudyScreen';
+
+export const LEARING_ROUTES = {
+  DICTIONARY: 'Dictionary',
+  STUDY: 'Study',
+}
 
 const AppNavigator = createStackNavigator(
 {
-  Learning: LearningScreen,
+  [LEARING_ROUTES.DICTIONARY]: DictionaryScreen,
+  [LEARING_ROUTES.STUDY]: StudyScreen,
 },
 {
-  initialRouteName: 'Learning',
+  initialRouteName: LEARING_ROUTES.DICTIONARY,
   defaultNavigationOptions,
 });
 
