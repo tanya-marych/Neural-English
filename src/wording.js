@@ -23,6 +23,8 @@ const Wording = {
   creation: 'Creation',
   editWord: 'Edit word',
   menu: 'Menu',
+  notEnoughWords: 'Not enough words for learning',
+  sorry: 'Sorry',
 };
 
 export default Wording;

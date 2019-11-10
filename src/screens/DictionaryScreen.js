@@ -124,10 +124,25 @@ class DictionaryScreen extends React.Component {
     headerRight: (
       <HeaderButton
         title={Wording.study}
-        onPress={() => navigation.navigate(LEARING_ROUTES.STUDY)}
+        onPress={navigation.getParam('onRightPress')}
       />
     ),
   });
+
+  openStudy = () => {
+    if (this.props.words.length > 5) {
+      this.props.navigation.navigate(LEARING_ROUTES.STUDY);
+    } else {
+      Alert.alert(Wording.sorry, Wording.notEnoughWords);
+    }
+    
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({
+      'onRightPress': this.openStudy,
+    });
+  }
 
   state = {
     selected: null,
