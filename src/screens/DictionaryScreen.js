@@ -130,7 +130,7 @@ class DictionaryScreen extends React.Component {
   });
 
   openStudy = () => {
-    if (this.props.words.length > 5) {
+    if (this.props.words.length >= 5) {
       this.props.navigation.navigate(LEARING_ROUTES.STUDY);
     } else {
       Alert.alert(Wording.sorry, Wording.notEnoughWords);
