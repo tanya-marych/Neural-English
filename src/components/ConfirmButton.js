@@ -1,12 +1,12 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+import {
+  TouchableOpacity, 
+  Text,
+  StyleSheet,
+  ViewPropTypes,
+} from 'react-native';
 import { Paddings, Color } from '../constants';
-
-const ConfirmButton = ({ onPress, text }) => (
-  <TouchableOpacity style={styles.container} onPress={onPress}>
-    <Text style={styles.text}>{text}</Text>
-  </TouchableOpacity>
-)
 
 const styles = StyleSheet.create({
   container: {
@@ -25,5 +25,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+const ConfirmButton = ({ onPress, text, containerStyle }) => (
+  <TouchableOpacity
+    style={[styles.container, containerStyle]}
+    onPress={onPress}
+  >
+    <Text style={styles.text}>{text}</Text>
+  </TouchableOpacity>
+);
+
+ConfirmButton.propTypes = {
+  onPress: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+  containerStyle: ViewPropTypes.style,
+};
+
+ConfirmButton.defaultProps = {
+  containerStyle: undefined,
+}
 
 export default ConfirmButton;

@@ -1,10 +1,18 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 
 import { getWordsInProgress } from '../redux/selectors';
-import { Paddings, Color } from '../constants';
+import { Paddings, Color, KEYBOARD_VERTICAL_OFFSET } from '../constants';
 import SelectWord from '../components/Learning/SelectWord';
 import ConfirmButton from '../components/ConfirmButton';
 import Wording from '../wording';
@@ -15,6 +23,9 @@ const { width } = Dimensions.get('screen');
 const IMAGE_SIZE = 0.75 * width;
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -179,11 +190,19 @@ class StudyScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        {this.props.progressWords.length
-          ? this.renderCurrentWord()
-          : null}
-      </View>
+      <KeyboardAvoidingView
+        behavior='padding'
+        style={styles.flex}
+        keyboardVerticalOffset={KEYBOARD_VERTICAL_OFFSET}
+      >
+        <ScrollView style={styles.flex}>
+          <View style={styles.container}>
+            {this.props.progressWords.length
+              ? this.renderCurrentWord()
+              : null}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

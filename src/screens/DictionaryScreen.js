@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Header } from 'react-navigation-stack';
 import { BlurView } from '@react-native-community/blur';
@@ -17,6 +18,8 @@ import { getWords } from '../redux/selectors';
 import { Paddings, Color } from '../constants';
 import Wording from '../wording';
 import { LEARING_ROUTES } from '../navigation/LearningNavigation';
+import ConfirmButton from '../components/ConfirmButton';
+import { deleteWord } from '../redux/actions';
 
 const COLUMNS = 2;
 const { width, height } = Dimensions.get('screen');
@@ -103,6 +106,15 @@ const styles = StyleSheet.create({
     height: OVERLAY_SIZE,
     borderRadius: Paddings.DEFAULT,
   },
+  button: {
+    backgroundColor: Color.BLACK(0.5),
+  },
+  buttons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
 });
 
 class DictionaryScreen extends React.Component {
@@ -122,6 +134,34 @@ class DictionaryScreen extends React.Component {
     this.setState({ selected });
   }
 
+  deleteWord = () => {
+    this.props.deleteWord({ id: this.state.selected.id });
+    this.toggleLargeMode(null);
+  }
+
+  confirmDeleteWord = () => {
+    Alert.alert(
+      Wording.deleteTitle,
+      Wording.deleteText,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: this.deleteWord },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  editWord = () => {
+    this.toggleLargeMode(null);
+    this.props.navigation.navigate(
+      LEARING_ROUTES.EDIT_WORD,
+      { word: this.state.selected },
+    );
+  }
+
   renderItem = ({ item: word }) => (
     <TouchableOpacity onPress={() => this.toggleLargeMode(word)}>
       <View style={styles.imageContainer}>
@@ -135,7 +175,7 @@ class DictionaryScreen extends React.Component {
             <Text style={styles.source}>{word.source}</Text>
           </Text>
           <Text>
-            <Text style={styles.translation}>{Wording.translation}</Text>
+            <Text style={styles.translation}>{Wording.translated}</Text>
             <Text style={styles.translation}>{word.translation}</Text>
           </Text>
           <Text>
@@ -165,6 +205,18 @@ class DictionaryScreen extends React.Component {
             source={{ uri: this.state.selected.url }}
             style={styles.overlayImage}
           />
+          <View style={styles.buttons}>
+            <ConfirmButton
+              containerStyle={styles.button}
+              text={Wording.edit}
+              onPress={this.editWord}
+            />
+            <ConfirmButton
+              containerStyle={styles.button}
+              text={Wording.delete}
+              onPress={this.confirmDeleteWord}
+            />
+          </View>
         </BlurView>
       </TouchableOpacity>
     ) : null;
@@ -189,6 +241,10 @@ DictionaryScreen.propTypes = {
   words: PropTypes.arrayOf({
     id: PropTypes.number,
   }).isRequired,
+  deleteWord: PropTypes.func.isRequired,
+  navigation: PropTypes.objectOf({
+    navigate: PropTypes.func,
+  }).isRequired,
 };
 
 function mapStateToProps(state) {
@@ -197,7 +253,13 @@ function mapStateToProps(state) {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    deleteWord: payload => dispatch(deleteWord(payload)),
+  };
+}
+
 export default connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 )(DictionaryScreen);

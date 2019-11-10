@@ -4,7 +4,7 @@ const Wording = {
   addWord: 'Add own description',
   addToLearning: 'Add to learning',
   original: 'en: ',
-  translation: 'en: ',
+  translated: 'en: ',
   createFromCamera: 'Create from Camera',
   selectPicture: 'Select Picture',
   study: 'Study',
@@ -12,6 +12,13 @@ const Wording = {
   studied: 'Studied: ',
   correctStudied: 'Correct: ',
   finish: 'Finish',
+  delete: 'Delete',
+  deleteTitle: 'Delete word?',
+  deleteText: 'Are you sure you want to delete word?',
+  edit: 'Edit',
+  source: 'Source',
+  translation: 'Translation',
+  save: 'Save',
 };
 
 export default Wording;

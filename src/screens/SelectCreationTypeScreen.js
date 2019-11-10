@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  Image,
   Text,
   View,
   TouchableOpacity,
@@ -55,6 +55,18 @@ class SelectCreationTypeScreen extends PureComponent {
       </View>
     );
   }
+}
+
+SelectCreationTypeScreen.propTypes = {
+  navigation: PropTypes.objectOf({
+    state: PropTypes.objectOf({
+      params: PropTypes.objectOf({
+        word: PropTypes.objectOf({
+          id: PropTypes.number,
+        })
+      })
+    })
+  }).isRequired,
 }
 
 const styles = StyleSheet.create({

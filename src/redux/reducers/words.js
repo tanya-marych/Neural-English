@@ -1,4 +1,4 @@
-import { ADD_WORD, SAVE_LEARNED_WORDS } from "../actionTypes";
+import { ADD_WORD, SAVE_LEARNED_WORDS, DELETE_WORD, EDIT_WORD } from "../actionTypes";
 import { LANGUAGE_TYPES } from "../constants";
 
 const initialState = {
@@ -57,6 +57,33 @@ export default function(state = initialState, action) {
 
       return newState;
     }
+    case DELETE_WORD: {
+      const newState = Object.assign({}, state);
+      const words = newState[newState.language];
+
+      const { id } = action.payload;
+
+      words.allIds = words.allIds.filter(wordId => wordId !== id);
+      delete words.byIds[id];
+
+      return newState;
+    }
+
+    case EDIT_WORD: {
+      const newState = Object.assign({}, state);
+      const words = newState[newState.language];
+
+      const { id, source, translation } = action.payload;
+
+      words.byIds[id] = {
+        ...words.byIds[id],
+        source,
+        translation,
+      };
+
+      return newState;
+    }
+
     default:
       return state;
   }

@@ -11,20 +11,20 @@ export const getWordsByCurrentLang = createSelector(
 );
 
 export const getWordsAllIdsList = createSelector(
-  [getWordsByCurrentLang],
-  (words) => words.allIds,
+  [getWordsStore, getCurrentLang],
+  (words, lang) => words[lang].allIds,
 );
   
 export const getWordById = createSelector(
-  [getWordsByCurrentLang, (state, id) => id],
-  (words, id) => words.byIds
-    ? { ...words.byIds[id], id }
+  [getWordsStore, getCurrentLang, (state, id) => id],
+  (words, lang, id) => words[lang].byIds
+    ? { ...words[lang].byIds[id], id }
     : {},
 );
 
 export const getWords = createSelector(
-  [getWordsAllIdsList, state => state],
-  (allIds, state) => allIds.map(id => getWordById(state, id)),
+  [getWordsStore, getCurrentLang, state => state],
+  (words, lang, state) => words[lang].allIds.map(id => getWordById(state, id)),
 );
 
 export const getRandomTranslations = createSelector(
@@ -47,7 +47,6 @@ export const getRandomTranslations = createSelector(
 export const getWordsInProgress = createSelector(
   [getWords, state => state],
   (words, state) => {
-    console.warn('words', words);
     const progressWords = shuffle(words.filter(word => word.study.amount < 10))
       .slice(0, 10)
       .map(word => {

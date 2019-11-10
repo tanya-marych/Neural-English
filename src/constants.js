@@ -1,3 +1,5 @@
+import { Header } from 'react-navigation-stack';
+
 export const Color = {
   BLUE: '#25d5fd',
   PALE_COOPER: '#DB7F67',
@@ -24,3 +26,5 @@ export const Paddings = {
   HALF_DEFAULT: 4,
   MEDIUM: 12,
 };
+
+export const KEYBOARD_VERTICAL_OFFSET = Header.HEIGHT + 40;

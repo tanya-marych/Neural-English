@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Image,
   Text,
   View,
-  TouchableOpacity,
   Dimensions,
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Header } from 'react-navigation-stack';
 
-import { translate } from '../services/googleTranslationApi';
+// import { translate } from '../services/googleTranslationApi';
 
 import {
   MODEL_TYPES,
@@ -23,7 +22,7 @@ import {
   detectObjectWithMOBILE
 } from '../services/recognizeService';
 
-import { Color, Paddings } from '../constants';
+import { Color, Paddings, KEYBOARD_VERTICAL_OFFSET } from '../constants';
 import WordButton from '../components/WordButton';
 import Wording from '../wording';
 import ConfirmButton from '../components/ConfirmButton';
@@ -32,7 +31,75 @@ import { CREATION_ROUTES } from '../navigation/CreationNavigation';
 
 const { height } = Dimensions.get('screen');
 const IMAGE_HEIGHT = height * 0.5;
-const KEYBOARD_VERTICAL_OFFSET = Header.HEIGHT + 40;
+
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    padding: Paddings.DEFAULT,
+  },
+  imageContainer: {
+    width: '100%',
+    height: IMAGE_HEIGHT,
+    backgroundColor: Color.YELLOW_ORANGE(),
+    borderRadius: Paddings.DEFAULT,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowColor: Color.BLACK(),
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: IMAGE_HEIGHT,
+    borderRadius: Paddings.DEFAULT,
+    overflow: 'hidden',
+  },
+  text: {
+    color: Color.WHITE(),
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  descriptionContainer: {
+    marginTop: 2 * Paddings.DEFAULT,
+    paddingHorizontal: 4 * Paddings.DEFAULT,
+    width: '100%',
+    alignItems: 'center',
+  },
+  wordsContainer: {
+    marginVertical: Paddings.DEFAULT,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  selectWord: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: Color.BLACK(0.5),
+    letterSpacing: 0.3,
+  },
+  input: {
+    marginVertical: Paddings.DEFAULT,
+    fontSize: 14,
+    backgroundColor: Color.BLACK(0.1),
+    borderRadius: 4,
+    padding: 6,
+    width: '100%',
+  },
+  confirmContainer: {
+    marginVertical: 4 * Paddings.DEFAULT,
+  },
+});
 
 class CreationScreen extends Component {
   constructor(props) {
@@ -163,74 +230,18 @@ class CreationScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    padding: Paddings.DEFAULT,
-  },
-  imageContainer: {
-    width: '100%',
-    height: IMAGE_HEIGHT,
-    backgroundColor: Color.YELLOW_ORANGE(),
-    borderRadius: Paddings.DEFAULT,
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowColor: Color.BLACK(),
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  image: {
-    flex: 1,
-    width: '100%',
-    height: IMAGE_HEIGHT,
-    borderRadius: Paddings.DEFAULT,
-    overflow: 'hidden',
-  },
-  text: {
-    color: Color.WHITE(),
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  descriptionContainer: {
-    marginTop: 2 * Paddings.DEFAULT,
-    paddingHorizontal: 4 * Paddings.DEFAULT,
-    width: '100%',
-    alignItems: 'center',
-  },
-  wordsContainer: {
-    marginVertical: Paddings.DEFAULT,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  selectWord: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: Color.BLACK(0.5),
-    letterSpacing: 0.3,
-  },
-  input: {
-    marginVertical: Paddings.DEFAULT,
-    fontSize: 14,
-    backgroundColor: Color.BLACK(0.1),
-    borderRadius: 4,
-    padding: 6,
-    width: '100%',
-  },
-  confirmContainer: {
-    marginVertical: 4 * Paddings.DEFAULT,
-  },
-});
+CreationScreen.propTypes = {
+  navigation: PropTypes.objectOf({
+    state: PropTypes.objectOf({
+      params: PropTypes.objectOf({
+        word: PropTypes.objectOf({
+          id: PropTypes.number,
+        })
+      })
+    })
+  }).isRequired,
+  addWord: PropTypes.func.isRequired,
+};
 
 function mapDispatchToProps(dispatch) {
   return {
