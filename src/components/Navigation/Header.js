@@ -1,25 +1,44 @@
 import React from 'react';
-import { TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
-import Menu from '../../images/menu.png';
-import { Color } from '../../constants';
+import { Color, Paddings } from '../../constants';
+import Wording from '../../wording';
 
 const styles = StyleSheet.create({
-  menu: {
-    width: 30,
-    height: 30,
-    marginLeft: 12,
-    marginVertical: 4,
-    opacity: 0.5,
+  container: {
+    paddingHorizontal: Paddings.DEFAULT,
+  },
+  text: {
+    fontSize: 14,
+    color: Color.DARK_RASPBERRY,
+    fontWeight: 'bold',
   },
 });
 
-const defaultNavigationOptions = ({navigation}) => ({
+export const HeaderButton = ({ title, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={styles.container}>
+    <Text style={styles.text}>{title}</Text>
+  </TouchableOpacity>
+);
+
+HeaderButton.propTypes = {
+  title: PropTypes.string,
+  onPress: PropTypes.func,
+}
+
+HeaderButton.defaultProps = {
+  title: null,
+  onPress: () => null,
+}
+
+const defaultNavigationOptions = ({ navigation }) => ({
   title: navigation.getParam('title'),
   headerLeft: (
-    <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-      <Image source={Menu} style={styles.menu} />
-    </TouchableOpacity>
+    <HeaderButton
+      onPress={() => navigation.toggleDrawer()}
+      title={Wording.menu}
+    />
   ),
   headerStyle: {
     backgroundColor: Color.HEADER,

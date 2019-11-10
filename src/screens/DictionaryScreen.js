@@ -20,6 +20,7 @@ import Wording from '../wording';
 import { LEARING_ROUTES } from '../navigation/LearningNavigation';
 import ConfirmButton from '../components/ConfirmButton';
 import { deleteWord } from '../redux/actions';
+import { HeaderButton } from '../components/Navigation/Header';
 
 const COLUMNS = 2;
 const { width, height } = Dimensions.get('screen');
@@ -119,10 +120,12 @@ const styles = StyleSheet.create({
 
 class DictionaryScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
+    title: Wording.dictionary,
     headerRight: (
-      <TouchableOpacity onPress={() => navigation.navigate(LEARING_ROUTES.STUDY)}>
-       <Text>{Wording.study}</Text>
-      </TouchableOpacity>
+      <HeaderButton
+        title={Wording.study}
+        onPress={() => navigation.navigate(LEARING_ROUTES.STUDY)}
+      />
     ),
   });
 

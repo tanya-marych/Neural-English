@@ -74,6 +74,10 @@ const styles = StyleSheet.create({
 });
 
 class EditWordScreen extends Component {
+  static navigationOptions = {
+    title: Wording.editWord,
+  }
+
   constructor(props) {
     super(props);
 

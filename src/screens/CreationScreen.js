@@ -102,6 +102,10 @@ const styles = StyleSheet.create({
 });
 
 class CreationScreen extends Component {
+  static navigationOptions = {
+    title: Wording.creation,
+  }
+
   constructor(props) {
     super(props);
     this.state = {

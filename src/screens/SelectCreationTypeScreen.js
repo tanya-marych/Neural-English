@@ -16,6 +16,10 @@ import Wording from '../wording';
 import Camera from '../components/Camera';
 
 class SelectCreationTypeScreen extends PureComponent {
+  static navigationOptions = {
+    title: Wording.creation,
+  }
+
   state = {
     showCamera: false,
   }

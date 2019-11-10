@@ -83,6 +83,10 @@ const styles = StyleSheet.create({
 });
 
 class StudyScreen extends React.Component {
+  static navigationOptions = {
+    title: Wording.study,
+  }
+
   state = {
     currentIndex: 0,
     learnedWords: [],

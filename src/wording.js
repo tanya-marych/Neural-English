@@ -19,6 +19,10 @@ const Wording = {
   source: 'Source',
   translation: 'Translation',
   save: 'Save',
+  dictionary: 'Dictionary',
+  creation: 'Creation',
+  editWord: 'Edit word',
+  menu: 'Menu',
 };
 
 export default Wording;
