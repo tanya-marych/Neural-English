@@ -18,7 +18,8 @@ export const Color = {
   YELLOW_ORANGE: (opacity = 1) => `rgba(255, 188, 66, ${opacity})`,
   BLACK: (opacity = 1) => `rgba(0,0,0,${opacity})`,
   WHITE: (opacity = 1) => `rgba(255,255,255,${opacity})`,
-  HEADER: '#fffddd',
+  // HEADER: 'rgba(249,249,249,1)',
+  HEADER: 'rgb(232, 220, 225)',
 };
 
 export const Paddings = {

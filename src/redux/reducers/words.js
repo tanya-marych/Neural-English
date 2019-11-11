@@ -3,6 +3,9 @@ import { LANGUAGE_TYPES } from "../constants";
 
 const initialState = {
   language: LANGUAGE_TYPES.en,
+  allLanguages: [
+    LANGUAGE_TYPES.en,
+  ],
   [LANGUAGE_TYPES.en]: {
     byIds: [],
     allIds: [],

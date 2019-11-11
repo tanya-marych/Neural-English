@@ -1564,7 +1564,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = kpi.tef.marych.dyploma;
+				PRODUCT_BUNDLE_IDENTIFIER = kpi.tef.marych.dyploma.neural;
 				PRODUCT_NAME = example;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1588,7 +1588,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = kpi.tef.marych.dyploma;
+				PRODUCT_BUNDLE_IDENTIFIER = kpi.tef.marych.dyploma.neural;
 				PRODUCT_NAME = example;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

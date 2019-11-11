@@ -42,7 +42,8 @@ const defaultNavigationOptions = ({ navigation }) => ({
   ),
   headerStyle: {
     backgroundColor: Color.HEADER,
-    borderBottomColor: Color.YELLOW_ORANGE(),
+    borderBottomColor: Color.DARK_RASPBERRY,
+    borderBottomWidth: 1,
   },
   headerTitleStyle: {
     fontWeight: 'bold',

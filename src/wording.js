@@ -25,6 +25,22 @@ const Wording = {
   menu: 'Menu',
   notEnoughWords: 'Not enough words for learning',
   sorry: 'Sorry',
+  settings: {
+    current: {
+      title: 'Current learning language',
+    },
+    listOfLangs: {
+      title: 'Learning langluages',
+    },
+    add: {
+      title: 'Add language',
+    },
+  },
+  languages: {
+    en: 'English',
+    fr: 'French',
+    es: 'Spanish',
+  }
 };
 
 export default Wording;

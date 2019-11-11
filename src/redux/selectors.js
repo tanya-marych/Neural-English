@@ -4,6 +4,7 @@ import { shuffle } from '../helpers/storeHelper';
 
 export const getWordsStore = state => state.words;
 export const getCurrentLang = state => state.words.language;
+export const getAllLanguages = state => state.words.allLanguages;
 
 export const getWordsByCurrentLang = createSelector(
   [getWordsStore, getCurrentLang],
