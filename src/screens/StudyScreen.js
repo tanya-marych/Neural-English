@@ -96,12 +96,12 @@ class StudyScreen extends React.Component {
   handlePressSelect = (selectedWord) => {
     if (!this.state.selectedFromOptionsId) {
       const currentIndexWord = this.props.progressWords[this.state.currentIndex];
-    
+
       this.setState(prevState => ({
         learnedWords: [
           ...prevState.learnedWords,
           {
-            id: selectedWord.id,
+            id: this.getCurrentLearningWord().id,
             isCorrect: currentIndexWord.id === selectedWord.id,
           },
         ],
@@ -139,8 +139,10 @@ class StudyScreen extends React.Component {
     }
   }
 
+  getCurrentLearningWord = () => this.props.progressWords[this.state.currentIndex];
+
   renderSelectFrom = () => {
-    const word = this.props.progressWords[this.state.currentIndex];
+    const word = this.getCurrentLearningWord();
     const { selectedFromOptionsId } = this.state;
 
     return (
