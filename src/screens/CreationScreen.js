@@ -9,10 +9,11 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 
-// import { translate } from '../services/googleTranslationApi';
+import { translate } from '../services/googleTranslationApi';
 
 import {
   MODEL_TYPES,
@@ -28,6 +29,7 @@ import Wording from '../wording';
 import ConfirmButton from '../components/ConfirmButton';
 import { addWord } from '../redux/actions';
 import { CREATION_ROUTES } from '../navigation/CreationNavigation';
+import { getCurrentLang } from '../redux/selectors';
 
 const { height } = Dimensions.get('screen');
 const IMAGE_HEIGHT = height * 0.5;
@@ -149,19 +151,28 @@ class CreationScreen extends Component {
   }
 
   handleTranslate = async () => {
-    if (this.state.selectedWord || this.textInput) {
-      this.props.addWord({
-        url: this.state.source.uri,
-        source: this.state.selectedWord || this.textInput,
-        translation: this.state.selectedWord || this.textInput,
+    try {
+      const translation = await translate({
+        text: this.state.selectedWord || this.textInput,
+        toLang: this.props.currentLanguage,
       });
-      this.setState({
-        selectedWord: null,
-        source: null,
-        recognitions: [],
-      });
-      this.textInput = null;
-      this.props.navigation.navigate(CREATION_ROUTES.SELECT_CREATION_TYPE);
+
+      if (this.state.selectedWord || this.textInput) {
+        this.props.addWord({
+          url: this.state.source.uri,
+          source: this.state.selectedWord || this.textInput,
+          translation,
+        });
+        this.setState({
+          selectedWord: null,
+          source: null,
+          recognitions: [],
+        });
+        this.textInput = null;
+        this.props.navigation.navigate(CREATION_ROUTES.SELECT_CREATION_TYPE);
+      }
+    } catch (err) {
+      Alert.alert('Error', err.message);
     }
   }
 
@@ -171,8 +182,8 @@ class CreationScreen extends Component {
     this.textInput = word;
   }
 
-  handlePressWord = (selectedWord) => {
-    this.setState({ selectedWord }, this.handleTranslate);
+  handlePressWord = async (selectedWord) => {
+    this.setState({ selectedWord }, await this.handleTranslate);
   }
 
   renderDescription = () => this.state.recognitions && this.state.recognitions.length
@@ -245,7 +256,14 @@ CreationScreen.propTypes = {
     })
   }).isRequired,
   addWord: PropTypes.func.isRequired,
+  currentLanguage: PropTypes.string.isRequired,
 };
+
+function mapStateToProps(state) {
+  return {
+    currentLanguage: getCurrentLang(state),
+  }
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -254,6 +272,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(CreationScreen);

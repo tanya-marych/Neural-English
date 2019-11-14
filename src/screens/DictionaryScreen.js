@@ -198,7 +198,7 @@ class DictionaryScreen extends React.Component {
 
   renderOverlay = () => (
     <Overlay
-      visible={this.state.selected}
+      visible
       onPress={() => this.toggleLargeMode(null)}
     >
       <Fragment>
@@ -231,7 +231,7 @@ class DictionaryScreen extends React.Component {
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
         />
-        {this.renderOverlay()}
+        {this.state.selected ? this.renderOverlay() : null}
       </View>
     );
   }

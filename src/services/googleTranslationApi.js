@@ -2,7 +2,7 @@ import { REACT_APP_GOOGLE_TRANSLATE_API_KEY } from 'react-native-dotenv';
 
 const TRANSLATE_URL = `https://translation.googleapis.com/language/translate/v2?key=${REACT_APP_GOOGLE_TRANSLATE_API_KEY}`;
 
-export const translate = async () => {
+export const translate = async ({ text, toLang }) => {
   try {
     const response = await fetch(TRANSLATE_URL, {
       method: 'POST',
@@ -11,15 +11,19 @@ export const translate = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        q: 'Hello, world',
+        q: text,
         source: 'en',
-        target: 'es',
+        target: toLang,
         format: 'text',
       }),
     });
-    let responseJson = await response.json();
+    const responseJson = await response.json();
+    const translation = responseJson.data.translations[0].translatedText;
 
-    return responseJson;
+
+    console.warn('123', translation, responseJson);
+
+    return translation;
   } catch (error) {
     console.warn(error);
   }
