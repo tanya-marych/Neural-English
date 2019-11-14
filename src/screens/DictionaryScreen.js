@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { getWords } from '../redux/selectors';
+import { getWords, getCurrentLang } from '../redux/selectors';
 import { Paddings, Color } from '../constants';
 import Wording from '../wording';
 import { LEARING_ROUTES } from '../navigation/LearningNavigation';
@@ -178,7 +178,7 @@ class DictionaryScreen extends React.Component {
             <Text style={styles.source}>{word.source}</Text>
           </Text>
           <Text>
-            <Text style={styles.translation}>{Wording.translated}</Text>
+            <Text style={styles.translation}>{this.props.currentLanguage}: </Text>
             <Text style={styles.translation}>{word.translation}</Text>
           </Text>
           <Text>
@@ -245,10 +245,12 @@ DictionaryScreen.propTypes = {
   navigation: PropTypes.objectOf({
     navigate: PropTypes.func,
   }).isRequired,
+  currentLanguage: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
+    currentLanguage: getCurrentLang(state),
     words: getWords(state),
   }
 }
