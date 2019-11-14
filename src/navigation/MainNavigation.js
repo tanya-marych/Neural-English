@@ -4,12 +4,12 @@ import CreationNavigation from './CreationNavigation';
 import LearningNavigation from './LearningNavigation';
 import SettingsNavigation from './SettingsNavigation';
 
-const DrawerNavigation = createDrawerNavigator({
+const MainNavigation = createDrawerNavigator({
   Creation: CreationNavigation,
   Learning: LearningNavigation,
   Settings: SettingsNavigation,
 }, {
-  initialRouteName: 'Settings',
+  initialRouteName: 'Creation',
 });
 
-export default DrawerNavigation;
+export default MainNavigation;

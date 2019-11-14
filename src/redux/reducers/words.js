@@ -2,10 +2,8 @@ import { ADD_WORD, SAVE_LEARNED_WORDS, DELETE_WORD, EDIT_WORD, SET_CURRENT_LANGU
 import { LANGUAGE_TYPES } from "../constants";
 
 const initialState = {
-  language: LANGUAGE_TYPES.en,
-  allLanguages: [
-    LANGUAGE_TYPES.en,
-  ],
+  language: null,
+  allLanguages: [],
   [LANGUAGE_TYPES.en]: {
     byIds: [],
     allIds: [],
@@ -104,9 +102,12 @@ export default function(state = initialState, action) {
     }
     case ADD_LANGUAGE: {
       const { language } = action.payload;
+      console.warn('ka', language);
       const newState = Object.assign({}, state);
       newState.allLanguages = [...state.allLanguages, language];
+      newState.language = language;
 
+      console.warn('new', newState);
 
       return newState;
     }
