@@ -172,7 +172,7 @@ class CreationScreen extends Component {
   }
 
   handlePressWord = (selectedWord) => {
-    this.setState({ selectedWord });
+    this.setState({ selectedWord }, this.handleTranslate);
   }
 
   renderDescription = () => this.state.recognitions && this.state.recognitions.length
