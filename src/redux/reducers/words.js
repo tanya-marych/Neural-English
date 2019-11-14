@@ -1,4 +1,4 @@
-import { ADD_WORD, SAVE_LEARNED_WORDS, DELETE_WORD, EDIT_WORD } from "../actionTypes";
+import { ADD_WORD, SAVE_LEARNED_WORDS, DELETE_WORD, EDIT_WORD, SET_CURRENT_LANGUAGE, ADD_LANGUAGE, DELETE_LANGUAGE } from "../actionTypes";
 import { LANGUAGE_TYPES } from "../constants";
 
 const initialState = {
@@ -7,6 +7,14 @@ const initialState = {
     LANGUAGE_TYPES.en,
   ],
   [LANGUAGE_TYPES.en]: {
+    byIds: [],
+    allIds: [],
+  },
+  [LANGUAGE_TYPES.es]: {
+    byIds: [],
+    allIds: [],
+  },
+  [LANGUAGE_TYPES.fr]: {
     byIds: [],
     allIds: [],
   },
@@ -87,6 +95,28 @@ export default function(state = initialState, action) {
       return newState;
     }
 
+    case SET_CURRENT_LANGUAGE: {
+      const { language } = action.payload;
+      const newState = Object.assign({}, state);
+      newState.language = language;
+
+      return newState;
+    }
+    case ADD_LANGUAGE: {
+      const { language } = action.payload;
+      const newState = Object.assign({}, state);
+      newState.allLanguages = [...state.allLanguages, language];
+
+
+      return newState;
+    }
+    case DELETE_LANGUAGE: {
+      const { language } = action.payload;
+      const newState = Object.assign({}, state);
+      newState.allLanguages = state.allLanguages.filter(lan => lan !== language);
+
+      return newState;
+    }
     default:
       return state;
   }

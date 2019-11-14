@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SettingsOption = ({ option, onPressOption }) => {
+const SettingsOption = ({ option, onPressOption, selectedOption }) => {
   const [isExpanded, setExpanded] = useState(false);
 
   return (
@@ -79,7 +79,9 @@ const SettingsOption = ({ option, onPressOption }) => {
                     <Text style={styles.optionValue}>
                       {Wording.languages[value]}
                     </Text>
-                    <Text style={styles.checkSymbol}>✔</Text>
+                    {selectedOption === value
+                      ? <Text style={styles.checkSymbol}>✔</Text>
+                      : null}
                   </View>
                 </TouchableOpacity>
               ))}
@@ -98,6 +100,11 @@ SettingsOption.propTypes = {
     values: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   onPressOption: PropTypes.func.isRequired,
+  selectedOption: PropTypes.string,
+}
+
+SettingsOption.defaultProps = {
+  selectedOption: undefined,
 }
 
 export default SettingsOption;

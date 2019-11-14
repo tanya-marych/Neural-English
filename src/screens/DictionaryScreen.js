@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   View,
@@ -10,8 +10,6 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { Header } from 'react-navigation-stack';
-import { BlurView } from '@react-native-community/blur';
 import PropTypes from 'prop-types';
 
 import { getWords } from '../redux/selectors';
@@ -21,9 +19,10 @@ import { LEARING_ROUTES } from '../navigation/LearningNavigation';
 import ConfirmButton from '../components/ConfirmButton';
 import { deleteWord } from '../redux/actions';
 import { HeaderButton } from '../components/Navigation/Header';
+import Overlay from '../components/Overlay';
 
 const COLUMNS = 2;
-const { width, height } = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 
 // margins and paddings
 const COLUMN_SIZE = (width - 2 * Paddings.DEFAULT) / COLUMNS;
@@ -87,20 +86,6 @@ const styles = StyleSheet.create({
     color: Color.CELADON_GREEN,
     fontSize: 14,
     fontWeight: '400',
-  },
-  overlay: {
-    width,
-    height: height - Header.HEIGHT,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  },
-  overlayImageContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   overlayImage: {
     width: OVERLAY_SIZE,
@@ -211,33 +196,30 @@ class DictionaryScreen extends React.Component {
 
   keyExtractor = item => item.id;
 
-  renderOverlay = () => this.state.selected
-    ? (
-      <TouchableOpacity style={styles.overlay} onPress={() => this.toggleLargeMode(null)}>
-        <BlurView
-          style={styles.overlayImageContainer}
-          blurType='light'
-          blurAmount={3}
-        >
-          <Image
-            source={{ uri: this.state.selected.url }}
-            style={styles.overlayImage}
+  renderOverlay = () => (
+    <Overlay
+      visible={this.state.selected}
+      onPress={() => this.toggleLargeMode(null)}
+    >
+      <Fragment>
+        <Image
+          source={{ uri: this.state.selected && this.state.selected.url }}
+          style={styles.overlayImage}
+        />
+        <View style={styles.buttons}>
+          <ConfirmButton
+            containerStyle={styles.button}
+            text={Wording.edit}
+            onPress={this.editWord}
           />
-          <View style={styles.buttons}>
-            <ConfirmButton
-              containerStyle={styles.button}
-              text={Wording.edit}
-              onPress={this.editWord}
-            />
-            <ConfirmButton
-              containerStyle={styles.button}
-              text={Wording.delete}
-              onPress={this.confirmDeleteWord}
-            />
-          </View>
-        </BlurView>
-      </TouchableOpacity>
-    ) : null;
+          <ConfirmButton
+            containerStyle={styles.button}
+            text={Wording.delete}
+            onPress={this.confirmDeleteWord}
+          />
+        </View>
+      </Fragment>
+    </Overlay>);
 
   render() {
     return (

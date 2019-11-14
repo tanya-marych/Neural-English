@@ -35,12 +35,16 @@ const Wording = {
     add: {
       title: 'Add language',
     },
+    delete: {
+      title: 'Delete language',
+    },
   },
   languages: {
     en: 'English',
     fr: 'French',
     es: 'Spanish',
-  }
+  },
+  selectLanguages: 'Select language to add',
 };
 
 export default Wording;
