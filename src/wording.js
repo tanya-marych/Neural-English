@@ -58,7 +58,7 @@ const Wording = {
     fr: 'French',
     es: 'Spanish',
   },
-  selectLanguages: 'Select language to add',
+  selectLanguages: 'Select language',
 };
 
 export default Wording;
