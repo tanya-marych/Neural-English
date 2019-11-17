@@ -57,17 +57,5 @@ export const getWordsInProgress = createSelector(
       });
 
       return progressWords;
-
-    // words with progress less 0.5
-    // const newWords = progressWords.filter(word => word.progress < 0.5).slice(5);
-    // const learnedWords = progressWords.filter(word => word.progress >= 0.5).slice(5);
-
-    // console.warn('123', newWords.concat(learnedWords));
-
-    // return newWords.concat(learnedWords).map(word => {
-    //   word.selectFrom = getRandomTranslations(word);
-
-    //   return word;
-    // });
   }
 );

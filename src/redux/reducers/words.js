@@ -102,12 +102,9 @@ export default function(state = initialState, action) {
     }
     case ADD_LANGUAGE: {
       const { language } = action.payload;
-      console.warn('ka', language);
       const newState = Object.assign({}, state);
       newState.allLanguages = [...state.allLanguages, language];
       newState.language = language;
-
-      console.warn('new', newState);
 
       return newState;
     }

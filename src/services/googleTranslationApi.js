@@ -20,9 +20,6 @@ export const translate = async ({ text, toLang }) => {
     const responseJson = await response.json();
     const translation = responseJson.data.translations[0].translatedText;
 
-
-    console.warn('123', translation, responseJson);
-
     return translation;
   } catch (error) {
     console.warn(error);

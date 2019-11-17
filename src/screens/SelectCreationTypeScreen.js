@@ -8,7 +8,10 @@ import {
   InteractionManager,
 } from 'react-native';
 
-import { selectImageFromLibrary } from '../helpers/imagePicker';
+import {
+  selectImageFromLibrary,
+  saveToSpecificFolder,
+} from '../helpers/imagePicker';
 
 import { Color, Paddings } from '../constants';
 import { CREATION_ROUTES } from '../navigation/CreationNavigation';
@@ -27,12 +30,16 @@ class SelectCreationTypeScreen extends PureComponent {
   toggleCamera = () =>
     this.setState(prevState => ({ showCamera: !prevState.showCamera }));
 
-  onSelectImage = () => selectImageFromLibrary(path => {
-    this.props.navigation.navigate(CREATION_ROUTES.CREATION, { path });
-  });
+  onSelectImage = async () => {
+    await selectImageFromLibrary(async (path) => {
+      const updatedPath = await saveToSpecificFolder(path);
+      this.props.navigation.navigate(CREATION_ROUTES.CREATION, { path: updatedPath });
+    });
+  }
 
-  handleTakeCameraPicture = (path) => {
-    this.props.navigation.navigate(CREATION_ROUTES.CREATION, { path });
+  handleTakeCameraPicture = async (path) => {
+    const updatedPath = await saveToSpecificFolder(path);
+    this.props.navigation.navigate(CREATION_ROUTES.CREATION, { path: updatedPath });
     InteractionManager.runAfterInteractions(this.toggleCamera);
   }
 

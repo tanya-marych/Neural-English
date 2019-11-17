@@ -75,7 +75,7 @@ class Camera extends React.PureComponent {
       this.setState({ loading: true });
       const data = await this.camera.takePictureAsync();
 
-      this.props.onTakePicture(data.uri);
+      await this.props.onTakePicture(data.uri);
       this.setState({ loading: false });
     } catch (err) {
       console.log('err: ', err);

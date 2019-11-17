@@ -82,7 +82,6 @@ const LanguageOverlay = ({
   confirmText,
 }) => {
   const [ selectedLan, setLan ] = useState(pickerValues[0]);
-  console.warn('21', pickerValues, selectedLan);
 
   return (
     <Overlay

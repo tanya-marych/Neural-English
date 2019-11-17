@@ -94,7 +94,6 @@ class WelcomeScreen extends React.Component {
   handleSelectLanguage = (language) => {
     this.setState({ language, mode: INTRO_MODES.TIPS });
 
-    console.warn('addLanguage', language);
     this.props.addLanguage({ language });
 
     setTimeout(() => {

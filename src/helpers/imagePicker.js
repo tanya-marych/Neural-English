@@ -1,5 +1,6 @@
 import ImagePicker from 'react-native-image-picker';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const options = {
   title: 'Select Avatar',
@@ -25,3 +26,28 @@ export const selectImageFromLibrary = (callback) => {
     }
   });
 }
+
+const getDir = () => `${RNFetchBlob.fs.dirs.DocumentDir}/NeuralEnglish`;
+
+const getDestination = (name) => `${getDir()}/${name}`;
+
+export const saveToSpecificFolder = async (path) => {
+  try {
+    const exists = await RNFetchBlob.fs.exists(getDir());
+
+    if (!exists) {
+      await RNFetchBlob.fs.mkdir(getDir());
+    }
+
+    const filename = path.split('/').slice().pop();
+    const sourcePath = path.split('///').pop();
+    const dest = getDestination(filename);
+    
+    await RNFetchBlob.fs.cp(sourcePath, dest);
+
+    return dest;
+  } catch(err) {
+    Alert.alert(err.message);
+    console.warn('err', err.message);
+  }
+};

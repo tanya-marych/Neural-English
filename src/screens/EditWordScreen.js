@@ -121,7 +121,7 @@ class EditWordScreen extends Component {
           <View style={styles.container}>
             <View style={styles.imageContainer}>
               <Image
-                source={word.source}
+                source={{uri: word.url}}
                 style={styles.image}
                 resizeMode="cover"
               />
