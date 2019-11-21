@@ -112,6 +112,7 @@ export default function(state = initialState, action) {
       const { language } = action.payload;
       const newState = Object.assign({}, state);
       newState.allLanguages = state.allLanguages.filter(lan => lan !== language);
+      newState.language = newState.allLanguages[0];
 
       return newState;
     }

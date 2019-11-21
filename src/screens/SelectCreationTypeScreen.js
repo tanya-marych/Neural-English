@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   InteractionManager,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -25,19 +26,23 @@ class SelectCreationTypeScreen extends PureComponent {
 
   state = {
     showCamera: false,
+    showSpinner: false,
   }
 
   toggleCamera = () =>
-    this.setState(prevState => ({ showCamera: !prevState.showCamera }));
+    this.setState(prevState => ({ showCamera: !prevState.showCamera, showSpinner: false }));
 
   onSelectImage = async () => {
+    this.setState({ showSpinner: true });
     await selectImageFromLibrary(async (path) => {
       const updatedPath = await saveToSpecificFolder(path);
       this.props.navigation.navigate(CREATION_ROUTES.CREATION, { path: updatedPath });
+      this.setState({ showSpinner: false });
     });
   }
 
   handleTakeCameraPicture = async (path) => {
+    this.setState({ showSpinner: true });
     const updatedPath = await saveToSpecificFolder(path);
     this.props.navigation.navigate(CREATION_ROUTES.CREATION, { path: updatedPath });
     InteractionManager.runAfterInteractions(this.toggleCamera);
@@ -63,6 +68,12 @@ class SelectCreationTypeScreen extends PureComponent {
           enabled={this.state.showCamera}
           closeCamera={this.toggleCamera}
         />
+        {this.state.showSpinner
+          ? (
+            <View style={styles.spinnerContainer}>
+              <ActivityIndicator />
+            </View>
+          ) : null}
       </View>
     );
   }
@@ -115,6 +126,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  spinnerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 export default SelectCreationTypeScreen;
