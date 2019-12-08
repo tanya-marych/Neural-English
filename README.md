@@ -1,4 +1,4 @@
-# tflite-react-native example
+# Neural English
 
 Use tflite-react-native plugin to run model on images.
 
